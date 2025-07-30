@@ -7,14 +7,14 @@ Searches multiple digital music platforms for tracks from a DJ set or playlist
 import requests
 import time
 import csv
-import json
 from urllib.parse import quote_plus, urljoin
 from bs4 import BeautifulSoup
 import re
 from dataclasses import dataclass
-from typing import List, Dict, Optional
+from typing import List, Dict
 import logging
-import sys
+from pathlib import Path
+import datetime
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -289,9 +289,54 @@ def parse_tracklist(tracklist_text: str) -> List[Track]:
                 
     return tracks
 
-def save_results_to_csv(tracks: List[Track], all_results: Dict[int, Dict[str, List[SearchResult]]], filename: str = "music_search_results.csv"):
-    """Save search results to CSV file"""
-    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+def ensure_data_directory() -> Path:
+    """Ensure the data directory exists in the repository and return its path"""
+    # Get the directory where this script is located
+    script_dir = Path(__file__).parent.absolute()
+    data_dir = script_dir / "data"
+    data_dir.mkdir(exist_ok=True)
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    run_dir = data_dir / timestamp
+    run_dir.mkdir(exist_ok=True, parents=True)
+    return run_dir
+
+def generate_stats(tracks: List[Track], all_results: Dict[int, Dict[str, List[SearchResult]]], stats_file: Path):
+    """Generate statistics about search results"""
+    total_tracks = len(tracks)
+    found_tracks = sum(1 for i in range(total_tracks) if i in all_results and all_results[i])
+    
+    # Count results by platform
+    platform_stats = {}
+    for results in all_results.values():
+        for platform, platform_results in results.items():
+            if platform not in platform_stats:
+                platform_stats[platform] = 0
+            if platform_results:
+                platform_stats[platform] += 1
+    
+    # Calculate success rates
+    platform_rates = {}
+    for platform, count in platform_stats.items():
+        platform_rates[platform] = (count / total_tracks) * 100
+    
+    # Write stats to file
+    with open(stats_file, 'w', encoding='utf-8') as f:
+        f.write(f"Search Results Summary\n")
+        f.write("=" * 50 + "\n")
+        f.write(f"Total tracks searched: {total_tracks}\n")
+        f.write(f"Tracks with at least one result: {found_tracks} ({found_tracks/total_tracks:.1%})\n\n")
+        
+        f.write("Success rate by platform:\n")
+        for platform, rate in sorted(platform_rates.items(), key=lambda x: x[1], reverse=True):
+            f.write(f"- {platform}: {rate:.1f}%\n")
+    
+    return platform_rates
+
+def save_results_to_csv(tracks: List[Track], all_results: Dict[int, Dict[str, List[SearchResult]]], output_dir: Path):
+    """Save search results to CSV file in the specified directory"""
+    output_file = output_dir / "music_search_results.csv"
+    
+    with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['timestamp', 'original_artist', 'original_title', 'remix_info', 'platform', 'found_artist', 'found_title', 'url', 'price']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         
@@ -327,6 +372,8 @@ def save_results_to_csv(tracks: List[Track], all_results: Dict[int, Dict[str, Li
                             'url': result.url,
                             'price': result.price
                         })
+    
+    return output_file
 
 def read_tracklist_file(filename: str) -> str:
     """Read tracklist from a file."""
@@ -342,19 +389,16 @@ def read_tracklist_file(filename: str) -> str:
 
 def main():
     import argparse
-    
-    # Set up argument parser
     import datetime
+    import shutil
     
-    # Generate default output filename with timestamp
-    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-    default_output = f'music_search_results_{timestamp}.csv'
+    # Set up data directory
+    run_dir = ensure_data_directory()
+    logger.info(f"Using data directory: {run_dir}")
     
     parser = argparse.ArgumentParser(description='Search for tracks across multiple music platforms.')
     parser.add_argument('input_file', nargs='?', default='tracklist.txt',
                       help='Path to the tracklist file (default: tracklist.txt)')
-    parser.add_argument('-o', '--output', default=default_output,
-                      help=f'Output CSV file (default: {default_output})')
     
     args = parser.parse_args()
     
@@ -362,8 +406,14 @@ def main():
     try:
         tracklist_text = read_tracklist_file(args.input_file)
         logger.info(f"Read tracklist from {args.input_file}")
+        
+        # Copy input file to data directory
+        input_copy = run_dir / "tracklist.txt"
+        shutil.copy2(args.input_file, input_copy)
+        logger.info(f"Copied input file to {input_copy}")
+        
     except Exception as e:
-        logger.error("Failed to read tracklist. Exiting.")
+        logger.error(f"Failed to read tracklist: {e}")
         return
     
     # Parse tracklist
@@ -386,13 +436,17 @@ def main():
         # Be respectful with rate limiting
         time.sleep(2)
     
-    # Save results
-    save_results_to_csv(tracks, all_results, args.output)
-    logger.info(f"Results saved to {args.output}")
+    # Save results and generate stats
+    results_file = save_results_to_csv(tracks, all_results, run_dir)
+    stats_file = run_dir / "stats.txt"
+    platform_rates = generate_stats(tracks, all_results, stats_file)
     
     # Print summary
     print(f"\nSearch complete! Found results for {len([k for k, v in all_results.items() if v])} out of {len(tracks)} tracks")
-    print(f"Results saved to '{args.output}'")
+    print(f"Results saved to: {run_dir}/")
+    print("\nSuccess rates by platform:")
+    for platform, rate in sorted(platform_rates.items(), key=lambda x: x[1], reverse=True):
+        print(f"- {platform}: {rate:.1f}%")
 
 if __name__ == "__main__":
     main()
