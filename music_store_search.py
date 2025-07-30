@@ -11,7 +11,7 @@ from urllib.parse import quote_plus, urljoin
 from bs4 import BeautifulSoup
 import re
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import List, Dict, Optional
 import logging
 from pathlib import Path
 import datetime
@@ -28,33 +28,89 @@ class Track:
     remix_info: str = ""
     
     @classmethod
-    def parse_tracklist_line(cls, line: str) -> 'Track':
-        """Parse a single line from the tracklist"""
-        # Split timestamp from track info
-        parts = line.strip().split(' ', 1)
-        if len(parts) < 2:
-            raise ValueError(f"Invalid line format: {line}")
+    def parse_tracklist_line(cls, line: str) -> Optional['Track']:
+        """Parse a single line from the tracklist
         
-        timestamp = parts[0]
-        track_info = parts[1]
+        Supports multiple formats:
+        1. With [mm] timestamp: "[01] Artist - Title (Remix Info) [Label]"
+        2. With HH:MM:SS timestamp: "00:01:23 Artist - Title (Remix Info)"
+        3. Without timestamp: "Artist - Title (Remix Info)"
+        4. Simple format: "Artist - Title"
         
-        # Extract remix info if present
-        remix_match = re.search(r'\((.*(?:Remix|Mix|Dub).*)\)$', track_info, re.IGNORECASE)
-        remix_info = remix_match.group(1) if remix_match else ""
+        Returns:
+            Track object if line is valid, None if line should be skipped
+        """
+        line = line.strip()
         
-        # Remove remix info from track_info for artist/title parsing
-        if remix_info:
-            track_info = re.sub(r'\s*\(.*(?:Remix|Mix|Dub).*\)$', '', track_info, flags=re.IGNORECASE)
+        # Skip empty lines, lines with just "..." or "?"
+        if not line or line == '...' or line == '?' or line.startswith('#') or line.startswith('//'):
+            return None
+            
+        # Initialize variables
+        timestamp = ""
+        track_info = line
+        
+        # Check for [mm] format: "[01] Artist - Title"
+        mm_timestamp_match = re.match(r'^\[(\d{1,3})\]\s*(.*)', line)
+        if mm_timestamp_match:
+            minutes = int(mm_timestamp_match.group(1))
+            # Convert minutes to HH:MM:SS format for consistency
+            hours = minutes // 60
+            mins = minutes % 60
+            timestamp = f"{hours:02d}:{mins:02d}:00"
+            track_info = mm_timestamp_match.group(2).strip()
+            
+            # Skip if track info is just a question mark
+            if track_info == '?':
+                return None
+        # Check for HH:MM:SS or MM:SS format
+        else:
+            timestamp_match = re.match(r'^(\d{1,2}:\d{2}(?::\d{2})?)\s+', line)
+            if timestamp_match:
+                timestamp = timestamp_match.group(1)
+                track_info = line[timestamp_match.end():].strip()
+        
+        # Extract label info if present in square brackets at the end
+        label = ""
+        label_match = re.search(r'\s*\[([^\]]+)\]\s*$', track_info)
+        if label_match:
+            label = label_match.group(1).strip()
+            track_info = track_info[:label_match.start()].strip()
+        
+        # Extract remix info if present (in parentheses at the end)
+        remix_info = ""
+        remix_match = re.search(r'\s*\(([^)]+)\)\s*$', track_info)
+        if remix_match:
+            remix_info = remix_match.group(1).strip()
+            track_info = track_info[:remix_match.start()].strip()
+        
+        # If we have both label and remix info, include label in remix info
+        if label and remix_info:
+            remix_info = f"{remix_info} [{label}]"
+        elif label:
+            remix_info = f"[{label}]"
         
         # Split artist and title
         if ' - ' in track_info:
-            artist, title = track_info.split(' - ', 1)
+            # Split on first occurrence of ' - '
+            parts = track_info.split(' - ', 1)
+            artist = parts[0].strip()
+            title = parts[1].strip() if len(parts) > 1 else ""
         else:
-            # Fallback if no clear separator
-            artist = track_info
-            title = ""
+            # If no clear separator, treat everything as the title
+            artist = ""
+            title = track_info.strip()
         
-        return cls(timestamp=timestamp, artist=artist.strip(), title=title.strip(), remix_info=remix_info)
+        # Skip if no artist or title could be determined
+        if not artist and not title:
+            return None
+            
+        return cls(
+            timestamp=timestamp,
+            artist=artist,
+            title=title,
+            remix_info=remix_info
+        )
 
 @dataclass
 class SearchResult:
@@ -275,18 +331,18 @@ class MusicStoreSearcher:
         return all_results
 
 def parse_tracklist(tracklist_text: str) -> List[Track]:
-    """Parse the entire tracklist"""
+    """Parse the tracklist text into a list of Track objects"""
     tracks = []
-    lines = tracklist_text.strip().split('\n')
-    
-    for line in lines:
-        if line.strip():
-            try:
-                track = Track.parse_tracklist_line(line)
+    for line in tracklist_text.split('\n'):
+        try:
+            track = Track.parse_tracklist_line(line)
+            if track:  # Only add if track is not None
                 tracks.append(track)
-            except Exception as e:
-                logger.warning(f"Could not parse line: '{line}' - {e}")
-                
+                logger.debug(f"Parsed track: {track.artist} - {track.title}")
+            else:
+                logger.debug(f"Skipped line: {line.strip()}")
+        except Exception as e:
+            logger.warning(f"Error parsing line '{line.strip()}': {e}")
     return tracks
 
 def ensure_data_directory() -> Path:

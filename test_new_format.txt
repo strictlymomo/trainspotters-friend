@@ -1,0 +1,23 @@
+[00] Groovestyle - Freedom Train (Underground Mix) [Classic]
+[02] ?
+...
+
+[12] Jazmina - Goodtimes (DJ Choco Washington Heights Vocal Mix) [Kult - 759 X]
+[15] Todd Terry - Dance With Me (Re-Mastered Mix) [InHouse - INHR 052]
+[19] Janet Rushmore - Joy (Choice Mix)
+[23] ?
+[26] 95 North Feat. Sabrynaah Pope - Hold On (Louie Vega's MAW Club) [King Street Sounds - KSD 216]
+[29] ?
+...
+
+[36] The MD X-Spress - God Made Me Phunky
+[38] ?
+
+# This is a comment line
+// This is also a comment
+
+?uestlove - The Next Movement  # Should be included
+...  # Should be skipped
+
+# Another comment
+[45] Artist With ? In Name - Song Title (Remix) [Label]  # Should be included
