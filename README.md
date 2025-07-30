@@ -1,2 +1,2 @@
 # trainspotters-friend
-music search engine based on a DJ playlist
+DJ tracklist music search tool - find tracks on Bandcamp Beatport Traxsource Hardwax
