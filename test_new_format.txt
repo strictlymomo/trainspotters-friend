@@ -1,3 +1,12 @@
+# This is a comment line
+// This is also a comment
+
+# SUPPORT FOR SPECIAL CHARACTERS
+?uestlove - The Next Movement  # Should be included
+...  # Should be skipped
+[45] Artist With ? In Name - Song Title (Remix) [Label]  # Should be included
+
+# SUPPORT FOR MIXESDB FORMAT
 [00] Groovestyle - Freedom Train (Underground Mix) [Classic]
 [02] ?
 ...
@@ -13,11 +22,4 @@
 [36] The MD X-Spress - God Made Me Phunky
 [38] ?
 
-# This is a comment line
-// This is also a comment
 
-?uestlove - The Next Movement  # Should be included
-...  # Should be skipped
-
-# Another comment
-[45] Artist With ? In Name - Song Title (Remix) [Label]  # Should be included

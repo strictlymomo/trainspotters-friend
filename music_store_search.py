@@ -4,17 +4,18 @@ Music Store Search Script
 Searches multiple digital music platforms for tracks from a DJ set or playlist
 """
 
-import requests
-import time
 import csv
-from urllib.parse import quote_plus, urljoin
-from bs4 import BeautifulSoup
-import re
-from dataclasses import dataclass
-from typing import List, Dict, Optional
-import logging
-from pathlib import Path
 import datetime
+import logging
+import re
+import time
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, List, Optional
+from urllib.parse import quote_plus, urljoin
+
+import requests
+from bs4 import BeautifulSoup
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -447,7 +448,7 @@ def main():
     import argparse
     import datetime
     import shutil
-    
+
     # Set up data directory
     run_dir = ensure_data_directory()
     logger.info(f"Using data directory: {run_dir}")
