@@ -1,25 +1,34 @@
-# This is a comment line
-// This is also a comment
+# THIS IS A COMMENT LINE
+// THIS IS ALSO A COMMENT
 
-# SUPPORT FOR SPECIAL CHARACTERS
-?uestlove - The Next Movement  # Should be included
-...  # Should be skipped
-[45] Artist With ? In Name - Song Title (Remix) [Label]  # Should be included
+####################################################
+# SUPPORTED FORMATS
+####################################################
 
-# SUPPORT FOR MIXESDB FORMAT
+00:06:21 Matias Aguayo - El Camaron (Ricardo Villalobos Remix)
+
+# MIXESDB
 [00] Groovestyle - Freedom Train (Underground Mix) [Classic]
 [02] ?
 ...
 
-[12] Jazmina - Goodtimes (DJ Choco Washington Heights Vocal Mix) [Kult - 759 X]
-[15] Todd Terry - Dance With Me (Re-Mastered Mix) [InHouse - INHR 052]
-[19] Janet Rushmore - Joy (Choice Mix)
-[23] ?
 [26] 95 North Feat. Sabrynaah Pope - Hold On (Louie Vega's MAW Club) [King Street Sounds - KSD 216]
-[29] ?
 ...
 
 [36] The MD X-Spress - God Made Me Phunky
-[38] ?
 
+# TABBED SPACES
+1.1	Unit Moebius – Die Ene Die Zweeft
 
+# NUMERICAL LISTS
+1. Num Artist - Num Title
+01. Leading Zero Artist - Leading Zero Title
+1.1 Subnumber Artist - Subnumber Title
+1.10 Double Digit Artist - Double Digit Title
+01.1 Leading Zero Sub Artist - Leading Zero Sub Title
+12. Plain Double Digit - Plain Double Title
+
+# SPECIAL CHARACTERS
+?uestlove - The Next Movement  # SHOULD BE INCLUDED
+...  # SHOULD BE SKIPPED
+[45] Artist With ? In Name - Song Title (Remix) [Label]  # SHOULD BE INCLUDED

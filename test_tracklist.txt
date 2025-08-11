@@ -1,16 +1,35 @@
+# THIS IS A COMMENT LINE
+// THIS IS ALSO A COMMENT
+
 00:06:21 Matias Aguayo - El Camaron (Ricardo Villalobos Remix)
-00:20:03 Heiko Laux & Johannes Heil - No Pain No Gain (Ricardo Villalobos Remix)
-00:26:39 Wladimir M. - Evil
-00:32:00 Ricardo Villalobos - Lugom-ix
-
-# This is a comment line
-
-Radiohead - Paranoid Android (Album Version)
 Daft Punk – Around the World (Live)
 Kraftwerk — The Robots
 
-# Line with no separator
+# LINE WITH NO SEPARATOR
 Unknown Artist Track Name
 
-# Line with multiple separators
-Artist - Title - Extra Info (Remix)
+# LINE WITH MULTIPLE SEPARATORS
+Artist - Title - Extra Info (Remix) 
+
+# SPECIAL CHARS
+?uestlove - The Next Movement  # SPECIAL CHARACTERS - SHOULD BE INCLUDED
+...  # SPECIAL CHARACTERS -SHOULD BE SKIPPED
+
+# MIXESDB FORMAT
+[00] Groovestyle - Freedom Train (Underground Mix) [Classic]
+[02] ?
+...
+
+[26] 95 North Feat. Sabrynaah Pope - Hold On (Louie Vega's MAW Club) [King Street Sounds - KSD 216]
+...
+
+[36] The MD X-Spress - God Made Me Phunky
+
+# NUMERICAL LIST FORMATS
+1. Num Artist - Num Title
+01. Leading Zero Artist - Leading Zero Title
+1.1 Subnumber Artist - Subnumber Title
+1.10 Double Digit Artist - Double Digit Title
+01.1 Leading Zero Sub Artist - Leading Zero Sub Title
+12. Plain Double Digit - Plain Double Title
+

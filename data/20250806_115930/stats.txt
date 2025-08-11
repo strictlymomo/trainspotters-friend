@@ -1,0 +1,6 @@
+Search Results Summary
+==================================================
+Total tracks searched: 15
+Tracks with at least one result: 0 (0.0%)
+
+Success rate by platform:

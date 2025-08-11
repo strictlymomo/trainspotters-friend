@@ -11,3 +11,7 @@ DJ tracklist music search tool - find tracks on Bandcamp, Beatport, Traxsource, 
 1. Copy tracklist to `./tracklist.txt`
 2. Run `python3 music_store_search.py`
 3. See `/data` for results
+
+## Formats Supported by the Parser
+
+`python3 music_store_search.py test_tracklist.txt`

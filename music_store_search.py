@@ -42,6 +42,17 @@ class Track:
             Track object if line is valid, None if line should be skipped
         """
         line = line.strip()
+        line = line.replace('\t', ' ')
+        
+        # Remove leading numerical list formats (e.g. 1., 01., 1.1, 1.10, etc.)
+        num_list_match = re.match(r'^(\d{1,3}(?:\.\d{1,3})?)\.?\s*', line)
+        if num_list_match:
+            line = line[num_list_match.end():].strip()
+
+        # If there is a tab, use only the part after the first tab as track info
+        if '\t' in line:
+            parts = line.split('\t', 1)
+            line = parts[1].strip()
         
         # Skip empty lines, lines with just "..." or "?"
         if not line or line == '...' or line == '?' or line.startswith('#') or line.startswith('//'):
@@ -91,18 +102,21 @@ class Track:
         elif label:
             remix_info = f"[{label}]"
         
-        # Split artist and title
-        if ' - ' in track_info:
-            # Split on first occurrence of ' - '
-            parts = track_info.split(' - ', 1)
-            artist = parts[0].strip()
-            title = parts[1].strip() if len(parts) > 1 else ""
+        # Split artist and title using ' - ', en dash (–), or em dash (—) as separator
+        dash_split = re.split(r'\s*[-–—]\s*', track_info, maxsplit=1)
+        if len(dash_split) == 2:
+            artist = dash_split[0].strip()
+            title = dash_split[1].strip()
+            # If artist is empty after splitting, treat the whole string as artist and title
+            if not artist and title:
+                artist = title
+                title = ""
         else:
-            # If no clear separator, treat everything as the title
-            artist = ""
-            title = track_info.strip()
-        
-        # Skip if no artist or title could be determined
+            # If no clear separator, treat everything as the artist if possible
+            artist = track_info.strip()
+            title = ""
+    
+        # Skip if both artist and title are empty
         if not artist and not title:
             return None
             
