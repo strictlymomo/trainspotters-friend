@@ -1,0 +1,16 @@
+{
+  "name": "trainspotters-friend",
+  "version": "1.0.0",
+  "description": "DJ mix tracklist digger and digital music store finder",
+  "scripts": {
+    "dig": "python digger.py"
+  },
+  "keywords": [
+    "music",
+    "dj",
+    "tracklist",
+    "mixesdb"
+  ],
+  "author": "",
+  "license": "ISC"
+}

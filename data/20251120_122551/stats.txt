@@ -1,0 +1,7 @@
+Search Results Summary
+==================================================
+Total tracks searched: 108
+Tracks with at least one result: 91 (84.3%)
+
+Success rate by platform:
+- bandcamp: 84.3%
