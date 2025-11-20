@@ -1,0 +1,252 @@
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  color: #646cff;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+/* Search Section */
+.search-section {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.search-section input {
+  flex: 1;
+  max-width: 400px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.search-section button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #646cff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.search-section button:hover {
+  background: #535bf2;
+}
+
+/* Tracklist Section */
+.tracklist-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.tracklist-section h2 {
+  margin-top: 0;
+  color: #fff;
+}
+
+.tracklist {
+  max-height: 300px;
+  overflow-y: auto;
+  text-align: left;
+  padding: 1rem;
+  background: #0f0f0f;
+  border-radius: 4px;
+}
+
+.track-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #222;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.track-item:last-child {
+  border-bottom: none;
+}
+
+/* Results Section */
+.results-section {
+  margin-top: 2rem;
+}
+
+.results-section h2 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filters input {
+  flex: 1;
+  min-width: 150px;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.filters button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.filters button:hover {
+  background: #555;
+}
+
+/* Table */
+.table-container {
+  overflow-x: auto;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1a1a1a;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead {
+  background: #0f0f0f;
+  position: sticky;
+  top: 0;
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #646cff;
+  border-bottom: 2px solid #444;
+}
+
+tbody tr {
+  border-bottom: 1px solid #2a2a2a;
+  transition: background 0.2s;
+}
+
+tbody tr:hover {
+  background: #252525;
+}
+
+td {
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+}
+
+.timestamp {
+  font-family: monospace;
+  color: #888;
+  white-space: nowrap;
+  width: 100px;
+}
+
+.track-info {
+  font-weight: 500;
+  min-width: 300px;
+}
+
+.track-info a {
+  color: #646cff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.track-info a:hover {
+  color: #535bf2;
+  text-decoration: underline;
+}
+
+.no-result {
+  color: #888;
+  font-style: italic;
+}
+
+.platform {
+  color: #888;
+  font-size: 0.85rem;
+  width: 100px;
+}
+
+.found-as {
+  font-size: 0.85rem;
+  color: #aaa;
+  max-width: 300px;
+}
+
+.found-artist {
+  font-weight: 500;
+  color: #999;
+  margin-bottom: 0.25rem;
+}
+
+.found-title {
+  color: #777;
+}
+
+.price {
+  font-weight: 600;
+  color: #4ade80;
+  text-align: right;
+  width: 80px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
