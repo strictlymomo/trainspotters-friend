@@ -91,7 +91,11 @@ function handleKeydown(e) {
   } else if (e.key === "x") {
     e.preventDefault();
     const audio = document.querySelector("audio");
-    if (audio) audio.currentTime = Math.min(audio.duration, audio.currentTime + SKIP_AMOUNT);
+    if (audio)
+      audio.currentTime = Math.min(
+        audio.duration,
+        audio.currentTime + SKIP_AMOUNT,
+      );
   } else if (e.key === "c") {
     e.preventDefault();
     skipToNextItem();
@@ -106,17 +110,20 @@ function skipToNextItem() {
   if (isSkipping) return;
   isSkipping = true;
 
-  const items = Array.from(document.querySelectorAll(".collection-item-container"));
+  const items = Array.from(
+    document.querySelectorAll(".collection-item-container"),
+  );
   const currentIndex = items.indexOf(nowPlaying);
   const nextItem = items[currentIndex + 1];
 
   if (nextItem) {
     startPlayback(nextItem);
-    nextItem.querySelector(".collection-item-art-container")
+    nextItem
+      .querySelector(".collection-item-art-container")
       ?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
-  setTimeout(() => isSkipping = false, 300);
+  setTimeout(() => (isSkipping = false), 300);
 }
 
 function startPlayback(item) {
@@ -169,7 +176,9 @@ async function loadMoreItems(maxItems = 500) {
   console.log("Loading more items...");
 
   while (true) {
-    const currentCount = document.querySelectorAll(".collection-item-container").length;
+    const currentCount = document.querySelectorAll(
+      ".collection-item-container",
+    ).length;
 
     if (currentCount >= maxItems) {
       console.log(`Reached ${currentCount} items (max: ${maxItems})`);
@@ -191,7 +200,9 @@ async function loadMoreItems(maxItems = 500) {
     window.scrollTo(0, document.body.scrollHeight);
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const showMoreButton = document.querySelector(".expand-container .show-more");
+    const showMoreButton = document.querySelector(
+      ".expand-container .show-more",
+    );
     if (showMoreButton?.offsetParent) {
       console.log("Clicking show more button...");
       showMoreButton.click();

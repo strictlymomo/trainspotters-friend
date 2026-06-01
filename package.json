@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "DJ mix tracklist digger and digital music store finder",
   "scripts": {
-    "dig": "python digger.py"
+    "dig": "python digger.py",
+    "server": "./run_server.sh",
+    "dev": "concurrently \"yarn server\" \"cd web && yarn dev\""
   },
   "keywords": [
     "music",
@@ -12,5 +14,8 @@
     "mixesdb"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }
